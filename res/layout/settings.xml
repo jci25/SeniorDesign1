@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    <PreferenceCategory android:title="Video Feed" >
+        <EditTextPreference
+                android:title="Set URL"
+                android:summary="RTSP feed URL"
+                android:key="prefURL"/>
+    </PreferenceCategory>
+     
+</PreferenceScreen>
