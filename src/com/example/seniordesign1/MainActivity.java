@@ -1,7 +1,9 @@
 package com.example.seniordesign1;
 
+import java.net.URI;
 import java.util.Locale;
 
+import com.codebutler.android_websockets.WebSocketClient;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import android.app.Dialog;
@@ -68,6 +70,7 @@ public class MainActivity extends FragmentActivity {
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
+		
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -135,8 +138,47 @@ public class MainActivity extends FragmentActivity {
     			return MapActivity_.init(position, thisContext);
             	// return SupportMapFragment.newInstance();
             case 0:
-            	MjpegFeed MF = MjpegFeed.init(position);
-            	
+            	final MjpegFeed MF = MjpegFeed.init(position);
+            	WebSocketClient client = new WebSocketClient(URI.create("ws://192.168.1.192:8000/ws"), new WebSocketClient.Listener(){
+                    @Override
+                    public void onConnect() {
+                    	System.out.println("commected");
+                        //Log.d(TAG, "Connected!");
+                    }
+
+                    @Override
+                    public void onMessage(final String message) {
+                        //Log.d(TAG, String.format("Got string message! %s", message));
+                    	System.out.println(message);
+                    	runOnUiThread(new Runnable() {
+                    	     @Override
+                    	     public void run() {
+
+                    	    	 MF.setText(message+" cpm");
+
+                    	    }
+                    	});
+                    	
+                    }
+
+                    @Override
+                    public void onMessage(byte[] data) {
+                        //Log.d(TAG, String.format("Got binary message! %s", toHexString(data));
+                    }
+
+                    @Override
+                    public void onDisconnect(int code, String reason) {
+                        //Log.d(TAG, String.format("Disconnected! Code: %d Reason: %s", code, reason));
+                    }
+
+                    @Override
+                    public void onError(Exception error) {
+                        //Log.e(TAG, "Error!", error);
+                    	System.out.println("ERROR:: "+error);
+                    }
+                }, null);
+                
+                client.connect();
             	return MF;
             default:// Fragment # 2-9 - Will show list
             	fragment = new DummySectionFragment();

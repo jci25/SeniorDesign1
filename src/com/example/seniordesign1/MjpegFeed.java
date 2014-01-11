@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import com.codebutler.android_websockets.*;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -32,6 +34,8 @@ public class MjpegFeed extends Fragment {
     private String path = "http://192.168.1.135:8080/?action=stream";
     
     private MjpegView mv = null;
+    
+    private TextView tv = null;
     
     private int width = 640;
     private int height = 480;
@@ -60,16 +64,23 @@ public class MjpegFeed extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View layoutView = inflater.inflate(R.layout.mjpeg_view, container,
+        final View layoutView = inflater.inflate(R.layout.mjpeg_view, container,
                 false);
         
         mv = (MjpegView) layoutView.findViewById(R.id.mv);
+        tv = (TextView) layoutView.findViewById(R.id.Gieger);
+        
         new DoRead().execute(path);
         
         return layoutView;
     }
     
-
+    
+    public void setText(String item) {
+        TextView view = (TextView) getActivity().findViewById(R.id.Gieger);
+        view.setText(item);
+      }
+    
     public void onStart() {
         super.onStart();
     }
